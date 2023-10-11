@@ -57,8 +57,7 @@ async def send_web_request(websocket, url, query, params):
                 print("Error: WEB response is not a list", r)
                 await websocket.send(json.dumps([]))
 
-            key_mapping = mapping.get("mapping", [])
-            if key_mapping:
+            if key_mapping := mapping.get("mapping", []):
                 for _ in r:
                     r_new = deepcopy(mapping.get("base", {}))
                     for pair in key_mapping:
@@ -207,7 +206,7 @@ async def websocket_handler(websocket):
 
             except Exception as e:
                 success = False
-                ack = "Error: " + str(e)
+                ack = f"Error: {str(e)}"
 
             await websocket.send(json.dumps({
                 "event": "O_EVENT_WSS_RESP",
@@ -234,9 +233,9 @@ async def websocket_handler(websocket):
                     await asyncio.sleep(0.5)
                     q = {
                         "type": "text",
-                        "label": "Return for " + query,
-                        "stream": True if i < 9 else False,
-                        "content": "text example "
+                        "label": f"Return for {query}",
+                        "stream": i < 9,
+                        "content": "text example ",
                     }
                     await websocket.send(json.dumps(q))
 
